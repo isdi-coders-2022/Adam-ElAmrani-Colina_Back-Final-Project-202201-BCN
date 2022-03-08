@@ -22,13 +22,13 @@ beforeEach(async () => {
     symbol: "ADC",
     slug: "adamcoin",
     date_added: "08/03/2022",
-    max_supply: 100000000000,
-    circulating_supply: 47944270954,
-    total_supply: 99989698177,
+    max_supply: "100000000000",
+    circulating_supply: "47944270954",
+    total_supply: "99989698177",
     last_updated: "2022-03-08T11:41:00.000Z",
     USD: {
       USD: {
-        price: 0.7248443517678109,
+        price: "0.7248443517678109",
       },
     },
   });
@@ -49,8 +49,8 @@ describe("Given a /list endpoint", () => {
       const statusCode = 200;
       const path = "/main-page/list";
       const { body } = await request(app).get(path).expect(statusCode);
-
       expect(body[0]).toHaveProperty("name");
+      expect(body[0].name).toEqual(newCrypto.name);
     });
   });
 });
