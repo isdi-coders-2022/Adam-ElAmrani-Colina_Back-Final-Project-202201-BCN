@@ -11,6 +11,6 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.json());
-app.use("/main-page", router);
+app.use("/cryptos", router);
 
 module.exports = app;

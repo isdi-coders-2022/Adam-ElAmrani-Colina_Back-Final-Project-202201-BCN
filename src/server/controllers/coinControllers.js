@@ -14,6 +14,7 @@ const deleteCrypto = async (req, res, next) => {
     const crypto = await Crypto.findByIdAndDelete(id);
     if (crypto) {
       res.json(`Crypto ${crypto.name} with id ${crypto.id} deleted.`);
+      debug(chalk.green(`Crypto ${crypto.name} with id ${crypto.id} deleted.`));
     } else {
       const error = new Error("Crypto not found");
       debug(chalk.bgBlackBright.white(`Error: ${error.message}`));
