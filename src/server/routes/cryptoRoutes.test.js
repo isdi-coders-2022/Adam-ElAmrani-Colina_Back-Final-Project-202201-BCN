@@ -47,7 +47,7 @@ describe("Given a /list endpoint", () => {
   describe("When it receives a request", () => {
     test("Then it should return status 200 and a json", async () => {
       const statusCode = 200;
-      const path = "/main-page/list";
+      const path = "/cryptos/list";
       const { body } = await request(app).get(path).expect(statusCode);
       expect(body[0]).toHaveProperty("name");
       expect(body[0].name).toEqual(newCrypto.name);
