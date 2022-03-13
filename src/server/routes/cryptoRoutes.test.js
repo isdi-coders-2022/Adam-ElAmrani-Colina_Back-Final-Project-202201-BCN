@@ -64,7 +64,7 @@ describe("Given a /cryptos/crypto/:id endpoint", () => {
       const statusCode = 500;
       const path = "/cryptos/crypto/2";
 
-      const { body } = await request(app).delete(path).expect(statusCode);
+      await request(app).delete(path).expect(statusCode);
     });
   });
 });
