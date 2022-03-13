@@ -18,19 +18,20 @@ beforeEach(async () => {
   jest.resetAllMocks();
 
   newCrypto = await Crypto.create({
-    name: "AdamCoin",
-    symbol: "ADC",
-    slug: "adamcoin",
-    date_added: "08/03/2022",
-    max_supply: "100000000000",
-    circulating_supply: "47944270954",
-    total_supply: "99989698177",
-    last_updated: "2022-03-08T11:41:00.000Z",
-    USD: {
-      USD: {
-        price: "0.7248443517678109",
-      },
-    },
+    id: 1,
+    name: "Bitcoin",
+    symbol: "BTC",
+    slug: "bitcoin",
+    tags: null,
+    max_supply: 21000000,
+    total_supply: 18979175,
+    platform: null,
+    price: 39356.40387526554,
+    percent_change_1h: 0.11645708,
+    percent_change_24h: -5.6570548,
+    percent_change_7d: -9.44341219,
+    market_cap: 746952076519.3429,
+    img: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=022",
   });
 });
 
@@ -48,9 +49,22 @@ describe("Given a /list endpoint", () => {
     test("Then it should return status 200 and a json", async () => {
       const statusCode = 200;
       const path = "/cryptos/list";
+
       const { body } = await request(app).get(path).expect(statusCode);
+
       expect(body[0]).toHaveProperty("name");
       expect(body[0].name).toEqual(newCrypto.name);
+    });
+  });
+});
+
+describe("Given a /cryptos/crypto/:id endpoint", () => {
+  describe("When it receives a delete request with a wrong id", () => {
+    test("Then it should return status 500", async () => {
+      const statusCode = 500;
+      const path = "/cryptos/crypto/2";
+
+      const { body } = await request(app).delete(path).expect(statusCode);
     });
   });
 });
