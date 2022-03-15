@@ -1,9 +1,6 @@
 const { Schema, model } = require("mongoose");
 
 const CryptoSchema = new Schema({
-  id: {
-    type: String || Number,
-  },
   name: {
     type: String,
   },
