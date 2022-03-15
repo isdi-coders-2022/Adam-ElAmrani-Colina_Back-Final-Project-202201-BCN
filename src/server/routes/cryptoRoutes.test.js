@@ -68,3 +68,34 @@ describe("Given a /cryptos/crypto/:id endpoint", () => {
     });
   });
 });
+
+describe("Given a /cryptos/new-crypto endpoint", () => {
+  describe("When it receives a post request with a valid body", () => {
+    test("Then it should return status 201 and the created crypto in the body", async () => {
+      const statusCode = 201;
+      const path = "/cryptos/new-crypto";
+      const post = {
+        name: "AiderCoin",
+        symbol: "ADC",
+        slug: "aidercoin",
+        tags: [],
+        max_supply: 21000000,
+        total_supply: 18979175,
+        platform: [],
+        price: 39356.40387526554,
+        percent_change_1h: 0.11645708,
+        percent_change_24h: -5.6570548,
+        percent_change_7d: -9.44341219,
+        market_cap: 746952076519.3429,
+        img: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=022",
+      };
+
+      const { body } = await request(app)
+        .post(path)
+        .send(post)
+        .expect(statusCode);
+
+      expect(body).toHaveProperty("name");
+    });
+  });
+});

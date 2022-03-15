@@ -27,4 +27,18 @@ const deleteCrypto = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { getCryptos, deleteCrypto };
+
+const createCrypto = async (req, res, next) => {
+  const newCrypto = req.body;
+  try {
+    const addNewCrypto = await Crypto.create(newCrypto);
+    res.status(201);
+    res.json(addNewCrypto);
+    debug(chalk.green(`Created new request ${addNewCrypto}`));
+  } catch (error) {
+    debug(chalk.red(`Error: ${error.message}`));
+    next(error);
+  }
+};
+
+module.exports = { getCryptos, deleteCrypto, createCrypto };
