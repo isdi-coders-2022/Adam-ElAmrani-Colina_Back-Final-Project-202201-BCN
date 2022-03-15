@@ -13,9 +13,7 @@ const CryptoSchema = new Schema({
   tags: {
     type: Array,
   },
-  date_added: {
-    type: Date,
-  },
+
   max_supply: {
     type: Number,
   },
