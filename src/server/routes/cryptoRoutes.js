@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.get("/list", getCryptos);
 router.delete("/crypto/:id", deleteCrypto);
-router.post("/new-coin", createCrypto);
+router.post("/new-crypto", createCrypto);
 
 module.exports = router;
