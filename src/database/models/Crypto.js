@@ -3,43 +3,50 @@ const { Schema, model } = require("mongoose");
 const CryptoSchema = new Schema({
   name: {
     type: String,
+    required: true,
   },
   symbol: {
     type: String,
+    required: true,
   },
   slug: {
     type: String,
+    required: true,
   },
   tags: {
     type: Array,
   },
-
   max_supply: {
-    type: Number,
+    type: String,
+    required: true,
   },
   total_supply: {
-    type: Number,
+    type: String,
+    required: true,
   },
   platform: {
     type: Array,
   },
   price: {
-    type: Number,
+    type: String,
+    required: true,
   },
   percent_change_1h: {
-    type: Number,
+    type: String,
   },
   percent_change_24h: {
-    type: Number,
+    type: String,
   },
   percent_change_7d: {
-    type: Number,
+    type: String,
   },
   market_cap: {
-    type: Number,
+    type: String,
+    required: true,
   },
   img: {
     type: String,
+    required: true,
   },
 });
 
