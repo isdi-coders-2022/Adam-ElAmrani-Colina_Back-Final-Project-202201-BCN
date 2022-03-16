@@ -1,5 +1,5 @@
 const Crypto = require("../../database/models/Crypto");
-const { getCryptos, deleteCrypto, createCrypto } = require("./coinControllers");
+const { getCryptos, deleteCrypto } = require("./coinControllers");
 
 let cryptos;
 beforeEach(() => {
