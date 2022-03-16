@@ -12,6 +12,7 @@ const path = require("path");
 const fs = require("fs");
 const debug = require("debug")("Coinster:CoinControllers");
 const Crypto = require("../../database/models/Crypto");
+const e = require("express");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -52,6 +53,8 @@ const deleteCrypto = async (req, res, next) => {
   }
 };
 
+const uploads = "uploads/";
+
 const createCrypto = async (req, res, next) => {
   // eslint-disable-next-line no-new
   new Promise((resolve, reject) => {
@@ -70,48 +73,51 @@ const createCrypto = async (req, res, next) => {
         percent_change_7d,
         market_cap,
       } = req.body;
-      const oldFileName = path.join("uploads", req.file.filename);
-      const newFileName = path.join("uploads", req.file.originalname);
+      const oldFileName = path.join(uploads, req.file.filename);
+      const newFileName = path.join(
+        uploads,
+        `${Date.now()}_${req.file.originalname}`
+      );
       fs.rename(oldFileName, newFileName, (error) => {
         if (error) {
           next(error);
           resolve();
-        }
-      });
-      fs.readFile(newFileName, async (error, file) => {
-        if (error) {
-          next(error);
-          reject();
         } else {
-          const storageRef = ref(
-            storage,
-            `${Date.now()}_${req.file.originalname}`
-          );
-          await uploadBytes(storageRef, file);
-          const firebaseFileURL = await getDownloadURL(storageRef);
-          const addNewCrypto = await Crypto.create({
-            name,
-            symbol,
-            slug,
-            tags,
-            max_supply,
-            total_supply,
-            platform,
-            price,
-            percent_change_1h,
-            percent_change_24h,
-            percent_change_7d,
-            market_cap,
-            img: firebaseFileURL,
+          debug("Rename complete");
+          fs.readFile(newFileName, async (error, file) => {
+            if (error) {
+              debug(chalk.red("Error reading file"));
+              next(error);
+              resolve();
+            } else {
+              const storageRef = ref(storage, req.file.originalname);
+              await uploadBytes(storageRef, file);
+              const firebaseFileURL = await getDownloadURL(storageRef);
+              const addNewCrypto = await Crypto.create({
+                name,
+                symbol,
+                slug,
+                tags,
+                max_supply,
+                total_supply,
+                platform,
+                price,
+                percent_change_1h,
+                percent_change_24h,
+                percent_change_7d,
+                market_cap,
+                img: firebaseFileURL,
+              });
+              res.status(201);
+              res.json(addNewCrypto);
+              debug(chalk.green(`Created new request ${addNewCrypto}`));
+              resolve();
+            }
           });
-          res.status(201);
-          res.json(addNewCrypto);
-          debug(chalk.green(`Created new request ${addNewCrypto}`));
-          resolve();
         }
       });
     } catch (error) {
-      fs.unlink(path.join("uploads", req.file.filename), () => {
+      fs.unlink(path.join(uploads, req.file.filename), () => {
         debug(chalk.red(`Error: ${error.message}`));
         next(error);
         resolve();

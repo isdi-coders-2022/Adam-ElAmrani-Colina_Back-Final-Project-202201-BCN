@@ -8,7 +8,7 @@ const {
   createCrypto,
 } = require("../controllers/coinControllers");
 
-const upload = multer({ dest: "uploads" });
+const upload = multer({ dest: "uploads/" });
 const cyrptoJoiSchema = require("../schemas/cryptoJoiSchema");
 
 const router = express.Router();

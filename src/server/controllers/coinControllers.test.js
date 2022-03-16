@@ -68,17 +68,3 @@ describe("Given a deleteCrypto controller", () => {
     });
   });
 });
-
-describe("Given a createCrypto controller", () => {
-  describe("When it can not create a new crypto", () => {
-    test.skip("Then it should catch an error and call next method", async () => {
-      const req = { body: undefined };
-      const next = jest.fn();
-
-      Crypto.create = jest.fn().mockResolvedValue();
-      await createCrypto(req, null, next);
-
-      expect(next).toHaveBeenCalled();
-    });
-  });
-});
