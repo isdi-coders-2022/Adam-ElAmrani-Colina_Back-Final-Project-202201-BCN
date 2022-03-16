@@ -1,5 +1,5 @@
 const Crypto = require("../../database/models/Crypto");
-const { getCryptos, deleteCrypto, createCrypto } = require("./coinControllers");
+const { getCryptos, deleteCrypto } = require("./coinControllers");
 
 let cryptos;
 beforeEach(() => {
@@ -64,20 +64,6 @@ describe("Given a deleteCrypto controller", () => {
       await deleteCrypto(req, res, next);
 
       expect(Crypto.findByIdAndDelete).toHaveBeenCalled();
-      expect(next).toHaveBeenCalled();
-    });
-  });
-});
-
-describe("Given a createCrypto controller", () => {
-  describe("When it can not create a new crypto", () => {
-    test.skip("Then it should catch an error and call next method", async () => {
-      const req = { body: undefined };
-      const next = jest.fn();
-
-      Crypto.create = jest.fn().mockResolvedValue();
-      await createCrypto(req, null, next);
-
       expect(next).toHaveBeenCalled();
     });
   });
