@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 require("dotenv").config();
 const chalk = require("chalk");
 const { initializeApp } = require("firebase/app");
@@ -51,7 +52,8 @@ const deleteCrypto = async (req, res, next) => {
   }
 };
 
-const createCrypto = async (req, res, next) =>
+const createCrypto = async (req, res, next) => {
+  // eslint-disable-next-line no-new
   new Promise((resolve, reject) => {
     try {
       const {
@@ -116,4 +118,6 @@ const createCrypto = async (req, res, next) =>
       });
     }
   });
+};
+
 module.exports = { getCryptos, deleteCrypto, createCrypto };
