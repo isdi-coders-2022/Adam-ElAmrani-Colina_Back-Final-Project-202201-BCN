@@ -12,7 +12,6 @@ const path = require("path");
 const fs = require("fs");
 const debug = require("debug")("Coinster:CoinControllers");
 const Crypto = require("../../database/models/Crypto");
-const e = require("express");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -57,7 +56,7 @@ const uploads = "uploads/";
 
 const createCrypto = async (req, res, next) => {
   // eslint-disable-next-line no-new
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     try {
       const {
         name,
@@ -80,37 +79,37 @@ const createCrypto = async (req, res, next) => {
       );
       fs.rename(oldFileName, newFileName, (error) => {
         if (error) {
+          debug(chalk.red("Error renaming file"));
           next(error);
           resolve();
         } else {
           debug("Rename complete");
           fs.readFile(newFileName, async (error, file) => {
+            const storageRef = ref(storage, req.file.originalname);
+            await uploadBytes(storageRef, file);
+            const firebaseFileURL = await getDownloadURL(storageRef);
+            const addNewCrypto = await Crypto.create({
+              name,
+              symbol,
+              slug,
+              tags,
+              max_supply,
+              total_supply,
+              platform,
+              price,
+              percent_change_1h,
+              percent_change_24h,
+              percent_change_7d,
+              market_cap,
+              img: firebaseFileURL,
+            });
+            res.status(201);
+            res.json(addNewCrypto);
+            debug(chalk.green(`Created new request ${addNewCrypto}`));
+            resolve();
             if (error) {
               debug(chalk.red("Error reading file"));
               next(error);
-              resolve();
-            } else {
-              const storageRef = ref(storage, req.file.originalname);
-              await uploadBytes(storageRef, file);
-              const firebaseFileURL = await getDownloadURL(storageRef);
-              const addNewCrypto = await Crypto.create({
-                name,
-                symbol,
-                slug,
-                tags,
-                max_supply,
-                total_supply,
-                platform,
-                price,
-                percent_change_1h,
-                percent_change_24h,
-                percent_change_7d,
-                market_cap,
-                img: firebaseFileURL,
-              });
-              res.status(201);
-              res.json(addNewCrypto);
-              debug(chalk.green(`Created new request ${addNewCrypto}`));
               resolve();
             }
           });
