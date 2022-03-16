@@ -84,7 +84,7 @@ const createCrypto = async (req, res, next) => {
           resolve();
         } else {
           debug("Rename complete");
-          fs.readFile(newFileName, async (error, file) => {
+          fs.readFile(newFileName, async (errorFile, file) => {
             const storageRef = ref(storage, req.file.originalname);
             await uploadBytes(storageRef, file);
             const firebaseFileURL = await getDownloadURL(storageRef);
@@ -107,9 +107,9 @@ const createCrypto = async (req, res, next) => {
             res.json(addNewCrypto);
             debug(chalk.green(`Created new request ${addNewCrypto}`));
             resolve();
-            if (error) {
+            if (errorFile) {
               debug(chalk.red("Error reading file"));
-              next(error);
+              next(errorFile);
               resolve();
             }
           });
