@@ -51,7 +51,7 @@ const deleteCrypto = async (req, res, next) => {
   }
 };
 
-const createCrypto = async (req, res, next) => {
+const createCrypto = async (req, res, next) =>
   new Promise((resolve, reject) => {
     try {
       const {
@@ -116,6 +116,4 @@ const createCrypto = async (req, res, next) => {
       });
     }
   });
-};
-
 module.exports = { getCryptos, deleteCrypto, createCrypto };
