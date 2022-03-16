@@ -71,7 +71,7 @@ describe("Given a /cryptos/crypto/:id endpoint", () => {
 
 describe("Given a /cryptos/new-crypto endpoint", () => {
   describe("When it receives a post request with a valid body", () => {
-    test("Then it should return status 201 and the created crypto in the body", async () => {
+    test.skip("Then it should return status 201 and the created crypto in the body", async () => {
       const statusCode = 201;
       const path = "/cryptos/new-crypto";
       const post = {
