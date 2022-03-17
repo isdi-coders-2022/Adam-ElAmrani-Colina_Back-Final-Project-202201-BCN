@@ -32,6 +32,25 @@ const getCryptos = async (req, res) => {
   debug(chalk.bgYellow.black("Requested Crytos"));
 };
 
+const getSingleCrypto = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const crypto = await Crypto.findById(id);
+    if (crypto) {
+      res.status(200).json(crypto);
+      debug(`Requested crypto: ${crypto}`);
+    } else {
+      const error = new Error("No se ha encontrado ninguna cryptomoneda");
+      error.code = 404;
+      next(error);
+      debug(chalk.red(`Error: ${error.message}`));
+    }
+  } catch (error) {
+    debug(chalk.red(`Error: ${error.message}`));
+    next(error);
+  }
+};
+
 const deleteCrypto = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -125,4 +144,4 @@ const createCrypto = async (req, res, next) => {
   });
 };
 
-module.exports = { getCryptos, deleteCrypto, createCrypto };
+module.exports = { getCryptos, deleteCrypto, createCrypto, getSingleCrypto };
