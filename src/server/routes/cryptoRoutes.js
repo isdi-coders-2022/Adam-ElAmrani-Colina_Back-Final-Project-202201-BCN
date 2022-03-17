@@ -15,7 +15,7 @@ const cyrptoJoiSchema = require("../schemas/cryptoJoiSchema");
 const router = express.Router();
 
 router.get("/list", getCryptos);
-router.get("/crypto", getSingleCrypto);
+router.get("/crypto/:id", getSingleCrypto);
 router.delete("/crypto/:id", deleteCrypto);
 router.post(
   "/new-crypto",
