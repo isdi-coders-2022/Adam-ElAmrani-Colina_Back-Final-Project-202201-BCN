@@ -1,0 +1,172 @@
+{
+  "info": {
+    "_postman_id": "04f046e1-b7ae-4605-a53b-3df13d83ac20",
+    "name": "Coinster-Adam-El-Amrani",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Lista de criptos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}cryptos/list",
+          "host": ["{{origin}}cryptos"],
+          "path": ["list"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete crypto",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}cryptos/crypto/:id",
+          "host": ["{{origin}}cryptos"],
+          "path": ["crypto", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": null
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create cryptos",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "po",
+              "type": "text"
+            },
+            {
+              "key": "symbol",
+              "value": "PRC",
+              "type": "text"
+            },
+            {
+              "key": "slug",
+              "value": "perrocoin",
+              "type": "text"
+            },
+            {
+              "key": "max_supply",
+              "value": "2000",
+              "type": "text"
+            },
+            {
+              "key": "total_supply",
+              "value": "20000",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "100",
+              "type": "text"
+            },
+            {
+              "key": "market_cap",
+              "value": "10101010",
+              "type": "text"
+            },
+            {
+              "key": "img",
+              "type": "file",
+              "src": "/C:/Users/Adam/Pictures/iCloud Photos/Downloads/AD7EC84E-305D-4C54-9EC5-BAECBB58B6B6.jpg"
+            },
+            {
+              "key": "percent_change_1h",
+              "value": "0.24",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "tags",
+              "value": "hola",
+              "type": "text"
+            },
+            {
+              "key": "platform",
+              "value": "hola",
+              "type": "text"
+            },
+            {
+              "key": "percent_change_1h",
+              "value": "0.001",
+              "type": "text"
+            },
+            {
+              "key": "percent_change_24h",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "percent_change_7d",
+              "value": "0.5",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{origin}}cryptos/new-crypto",
+          "host": ["{{origin}}cryptos"],
+          "path": ["new-crypto"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get single crypto",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{origin}}cryptos/crypto/:id",
+          "host": ["{{origin}}cryptos"],
+          "path": ["crypto", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": null
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "origin",
+      "value": "https://coinster.onrender.com/",
+      "type": "string"
+    }
+  ]
+}
