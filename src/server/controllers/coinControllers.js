@@ -146,7 +146,6 @@ const createCrypto = async (req, res, next) => {
 
 const updateCrypto = async (req, res, next) => {
   new Promise((resolve) => {
-    debugger;
     const cryptoToUpdate = req.body;
     const { id } = req.params;
     try {
