@@ -145,38 +145,57 @@ const createCrypto = async (req, res, next) => {
 };
 
 const updateCrypto = async (req, res, next) => {
-  const cryptoToUpdate = req.body;
-  const { id } = req.params;
-  try {
-    const editedCrypto = await Crypto.findByIdAndUpdate(id, cryptoToUpdate);
+  new Promise((resolve) => {
+    debugger;
+    const cryptoToUpdate = req.body;
+    const { id } = req.params;
+    try {
+      if (req.files) {
+        const oldFileName = path.join("uploads", req.files.filename);
+        const newFileName = path.join("uploads", req.files.originalname);
 
-    if (req.files.img) {
-      const oldFileName = path.join("uploads", req.files.filename);
-      const newFileName = path.join("uploads", req.files.originalname);
+        fs.rename(oldFileName, newFileName, () => {
+          fs.readFile(newFileName, async (error, file) => {
+            if (error) {
+              next(error);
+              debug(chalk.red("Error:", error.message));
+              resolve();
+            } else {
+              const fileRef = ref(storage, newFileName);
+              await uploadBytes(fileRef, file);
 
-      fs.rename(oldFileName, newFileName, () => {
-        fs.readFile(newFileName, async (error, file) => {
-          if (error) {
-            next(error);
-          } else {
-            const fileRef = ref(storage, newFileName);
-            await uploadBytes(fileRef, file);
+              const newImage = await getDownloadURL(fileRef);
 
-            const newImage = await getDownloadURL(fileRef);
-
-            await Crypto.findByIdAndUpdate(editedCrypto.id, {
-              img: newImage,
-            });
-          }
+              await Crypto.findByIdAndUpdate(editedCrypto.id, {
+                img: newImage,
+              });
+            }
+          });
         });
+      } else {
+        (async () => {
+          const editedCrypto = await Crypto.findByIdAndUpdate(
+            id,
+            cryptoToUpdate
+          );
+          res.status(200).json(editedCrypto);
+          debug(chalk.green("Updated crypto", editedCrypto));
+          resolve();
+        })();
+      }
+    } catch (error) {
+      fs.unlink(path.join("uploads", req.file.filename), () => {
+        error.code = 400;
+        next(error);
+        debug(chalk.red(`Error: ${error.message}`));
+        resolve();
       });
+      error.message = "Error updating the crypto";
+      error.code = 400;
+      next(error);
+      resolve();
     }
-    res.status(200).json(editedCrypto);
-    debug(chalk.green("Updated crypto", editedCrypto));
-  } catch (error) {
-    next(error);
-    debug(chalk.red(`Error: ${error.message}`));
-  }
+  });
 };
 
 module.exports = {
