@@ -7,6 +7,7 @@ const {
   deleteCrypto,
   createCrypto,
   getSingleCrypto,
+  updateCrypto,
 } = require("../controllers/coinControllers");
 
 const upload = multer({ dest: "uploads/" });
@@ -23,5 +24,6 @@ router.post(
   validate(cyrptoJoiSchema),
   createCrypto
 );
+router.patch("/crypto/:id", updateCrypto);
 
 module.exports = router;
