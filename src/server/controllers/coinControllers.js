@@ -12,6 +12,7 @@ const path = require("path");
 const fs = require("fs");
 const debug = require("debug")("Coinster:CoinControllers");
 const Crypto = require("../../database/models/Crypto");
+const { deepStrictEqual } = require("assert");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -122,8 +123,7 @@ const createCrypto = async (req, res, next) => {
               market_cap,
               img: firebaseFileURL,
             });
-            res.status(201);
-            res.json(addNewCrypto);
+            res.status(201).json(addNewCrypto);
             debug(chalk.green(`Created new request ${addNewCrypto}`));
             resolve();
             if (errorFile) {
@@ -144,4 +144,45 @@ const createCrypto = async (req, res, next) => {
   });
 };
 
-module.exports = { getCryptos, deleteCrypto, createCrypto, getSingleCrypto };
+const updateCrypto = async (req, res, next) => {
+  const cryptoToUpdate = req.body;
+  const { id } = req.params;
+  try {
+    const editedCrypto = await Crypto.findByIdAndUpdate(id, cryptoToUpdate);
+
+    if (req.files.img) {
+      const oldFileName = path.join("uploads", req.files.filename);
+      const newFileName = path.join("uploads", req.files.originalname);
+
+      fs.rename(oldFileName, newFileName, () => {
+        fs.readFile(newFileName, async (error, file) => {
+          if (error) {
+            next(error);
+          } else {
+            const fileRef = ref(storage, newFileName);
+            await uploadBytes(fileRef, file);
+
+            const newImage = await getDownloadURL(fileRef);
+
+            await Crypto.findByIdAndUpdate(editedCrypto.id, {
+              img: newImage,
+            });
+          }
+        });
+      });
+    }
+    res.status(200).json(editedCrypto);
+    debug(chalk.green("Updated crypto", editedCrypto));
+  } catch (error) {
+    next(error);
+    debug(chalk.red(`Error: ${error.message}`));
+  }
+};
+
+module.exports = {
+  getCryptos,
+  deleteCrypto,
+  createCrypto,
+  getSingleCrypto,
+  updateCrypto,
+};
