@@ -122,8 +122,7 @@ const createCrypto = async (req, res, next) => {
               market_cap,
               img: firebaseFileURL,
             });
-            res.status(201);
-            res.json(addNewCrypto);
+            res.status(201).json(addNewCrypto);
             debug(chalk.green(`Created new request ${addNewCrypto}`));
             resolve();
             if (errorFile) {
@@ -144,4 +143,63 @@ const createCrypto = async (req, res, next) => {
   });
 };
 
-module.exports = { getCryptos, deleteCrypto, createCrypto, getSingleCrypto };
+const updateCrypto = async (req, res, next) => {
+  new Promise((resolve) => {
+    const cryptoToUpdate = req.body;
+    const { id } = req.params;
+    try {
+      if (req.files) {
+        const oldFileName = path.join("uploads", req.files.filename);
+        const newFileName = path.join("uploads", req.files.originalname);
+
+        fs.rename(oldFileName, newFileName, () => {
+          fs.readFile(newFileName, async (error, file) => {
+            if (error) {
+              next(error);
+              debug(chalk.red("Error:", error.message));
+              resolve();
+            } else {
+              const fileRef = ref(storage, newFileName);
+              await uploadBytes(fileRef, file);
+
+              const newImage = await getDownloadURL(fileRef);
+
+              await Crypto.findByIdAndUpdate(id, {
+                img: newImage,
+              });
+            }
+          });
+        });
+      } else {
+        (async () => {
+          const editedCrypto = await Crypto.findByIdAndUpdate(
+            id,
+            cryptoToUpdate
+          );
+          res.status(200).json(editedCrypto);
+          debug(chalk.green("Updated crypto", editedCrypto));
+          resolve();
+        })();
+      }
+    } catch (error) {
+      fs.unlink(path.join("uploads", req.file.filename), () => {
+        error.code = 400;
+        next(error);
+        debug(chalk.red(`Error: ${error.message}`));
+        resolve();
+      });
+      error.message = "Error updating the crypto";
+      error.code = 400;
+      next(error);
+      resolve();
+    }
+  });
+};
+
+module.exports = {
+  getCryptos,
+  deleteCrypto,
+  createCrypto,
+  getSingleCrypto,
+  updateCrypto,
+};
