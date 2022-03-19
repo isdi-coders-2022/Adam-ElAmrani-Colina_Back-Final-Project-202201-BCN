@@ -12,7 +12,6 @@ const path = require("path");
 const fs = require("fs");
 const debug = require("debug")("Coinster:CoinControllers");
 const Crypto = require("../../database/models/Crypto");
-const { deepStrictEqual } = require("assert");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -165,7 +164,7 @@ const updateCrypto = async (req, res, next) => {
 
               const newImage = await getDownloadURL(fileRef);
 
-              await Crypto.findByIdAndUpdate(editedCrypto.id, {
+              await Crypto.findByIdAndUpdate(id, {
                 img: newImage,
               });
             }
