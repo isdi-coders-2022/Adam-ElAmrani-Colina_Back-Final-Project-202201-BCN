@@ -13,6 +13,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  admin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = model("User", UserSchema, "users");
