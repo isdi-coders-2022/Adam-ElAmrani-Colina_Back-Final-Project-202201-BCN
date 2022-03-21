@@ -91,48 +91,53 @@ const createCrypto = async (req, res, next) => {
         percent_change_7d,
         market_cap,
       } = req.body;
-      const oldFileName = path.join(uploads, req.file.filename);
-      const newFileName = path.join(
-        uploads,
-        `${Date.now()}_${req.file.originalname}`
-      );
-      fs.rename(oldFileName, newFileName, (error) => {
-        if (error) {
-          debug(chalk.red("Error renaming file"));
-          next(error);
-          resolve();
-        } else {
-          debug("Rename complete");
-          fs.readFile(newFileName, async (errorFile, file) => {
-            const storageRef = ref(storage, req.file.originalname);
-            await uploadBytes(storageRef, file);
-            const firebaseFileURL = await getDownloadURL(storageRef);
-            const addNewCrypto = await Crypto.create({
-              name,
-              symbol,
-              slug,
-              tags,
-              max_supply,
-              total_supply,
-              platform,
-              price,
-              percent_change_1h,
-              percent_change_24h,
-              percent_change_7d,
-              market_cap,
-              img: firebaseFileURL,
-            });
-            res.status(201).json(addNewCrypto);
-            debug(chalk.green(`Created new request ${addNewCrypto}`));
+      const checkCrypto = Crypto.findOne(name);
+      if (checkCrypto) {
+        res.status(400).json({ error: "La moneda ya existe" });
+      } else {
+        const oldFileName = path.join(uploads, req.file.filename);
+        const newFileName = path.join(
+          uploads,
+          `${Date.now()}_${req.file.originalname}`
+        );
+        fs.rename(oldFileName, newFileName, (error) => {
+          if (error) {
+            debug(chalk.red("Error renaming file"));
+            next(error);
             resolve();
-            if (errorFile) {
-              debug(chalk.red("Error reading file"));
-              next(errorFile);
+          } else {
+            debug("Rename complete");
+            fs.readFile(newFileName, async (errorFile, file) => {
+              const storageRef = ref(storage, req.file.originalname);
+              await uploadBytes(storageRef, file);
+              const firebaseFileURL = await getDownloadURL(storageRef);
+              const addNewCrypto = await Crypto.create({
+                name,
+                symbol,
+                slug,
+                tags,
+                max_supply,
+                total_supply,
+                platform,
+                price,
+                percent_change_1h,
+                percent_change_24h,
+                percent_change_7d,
+                market_cap,
+                img: firebaseFileURL,
+              });
+              res.status(201).json(addNewCrypto);
+              debug(chalk.green(`Created new request ${addNewCrypto}`));
               resolve();
-            }
-          });
-        }
-      });
+              if (errorFile) {
+                debug(chalk.red("Error reading file"));
+                next(errorFile);
+                resolve();
+              }
+            });
+          }
+        });
+      }
     } catch (error) {
       fs.unlink(path.join(uploads, req.file.filename), () => {
         debug(chalk.red(`Error: ${error.message}`));
