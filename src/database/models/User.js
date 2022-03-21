@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  crypto: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = model("User", UserSchema, "users");

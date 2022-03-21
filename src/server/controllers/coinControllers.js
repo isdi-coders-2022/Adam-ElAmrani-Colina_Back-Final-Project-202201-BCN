@@ -163,21 +163,20 @@ const updateCrypto = async (req, res, next) => {
               await uploadBytes(fileRef, file);
 
               const newImage = await getDownloadURL(fileRef);
-
-              await Crypto.findByIdAndUpdate(id, {
-                img: newImage,
-              });
+              cryptoToUpdate.img = newImage;
+              await Crypto.findByIdAndUpdate(id, cryptoToUpdate, { new: true });
             }
           });
         });
       } else {
         (async () => {
+          const cryptoToBeUpdated = req.body;
           const editedCrypto = await Crypto.findByIdAndUpdate(
             id,
-            cryptoToUpdate
+            cryptoToBeUpdated
           );
           res.status(200).json(editedCrypto);
-          debug(chalk.green("Updated crypto", editedCrypto));
+          debug(chalk.green("Updated crypto"));
           resolve();
         })();
       }
