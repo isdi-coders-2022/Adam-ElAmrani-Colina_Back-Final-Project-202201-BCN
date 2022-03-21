@@ -2,6 +2,7 @@ require("dotenv").config();
 const debug = require("debug")("Coinster:UserControllers:");
 const chalk = require("chalk");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../../database/models/User");
 
 const register = async (req, res, next) => {
@@ -54,4 +55,4 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = register;
+module.exports = { register, login };

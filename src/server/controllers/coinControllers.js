@@ -165,7 +165,6 @@ const updateCrypto = async (req, res, next) => {
               const newImage = await getDownloadURL(fileRef);
               cryptoToUpdate.img = newImage;
               await Crypto.findByIdAndUpdate(id, cryptoToUpdate, { new: true });
-              console.log(cryptoToUpdate, "FSREADFILE");
             }
           });
         });
@@ -177,7 +176,6 @@ const updateCrypto = async (req, res, next) => {
             id,
             cryptoToBeUpdated
           );
-          console.log(cryptoToBeUpdated);
           res.status(200).json(editedCrypto);
           debug(chalk.green("Updated crypto"));
           resolve();
