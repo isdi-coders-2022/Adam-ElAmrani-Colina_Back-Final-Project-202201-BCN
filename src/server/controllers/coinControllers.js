@@ -148,9 +148,9 @@ const updateCrypto = async (req, res, next) => {
     const cryptoToUpdate = req.body;
     const { id } = req.params;
     try {
-      if (req.files) {
-        const oldFileName = path.join("uploads", req.files.filename);
-        const newFileName = path.join("uploads", req.files.originalname);
+      if (req.file) {
+        const oldFileName = path.join("uploads", req.file.filename);
+        const newFileName = path.join("uploads", req.file.originalname);
 
         fs.rename(oldFileName, newFileName, () => {
           fs.readFile(newFileName, async (error, file) => {
@@ -159,12 +159,19 @@ const updateCrypto = async (req, res, next) => {
               debug(chalk.red("Error:", error.message));
               resolve();
             } else {
-              const fileRef = ref(storage, newFileName);
-              await uploadBytes(fileRef, file);
+              const storageRef = ref(storage, req.file.originalname);
+              await uploadBytes(storageRef, file);
 
-              const newImage = await getDownloadURL(fileRef);
+              const newImage = await getDownloadURL(storageRef);
               cryptoToUpdate.img = newImage;
-              await Crypto.findByIdAndUpdate(id, cryptoToUpdate, { new: true });
+              const updatedCrypto = await Crypto.findByIdAndUpdate(
+                id,
+                cryptoToUpdate,
+                { new: true }
+              );
+              res.status(200).json(updatedCrypto);
+              debug(chalk.green("Updated crypto"));
+              resolve();
             }
           });
         });
@@ -173,7 +180,8 @@ const updateCrypto = async (req, res, next) => {
           const cryptoToBeUpdated = req.body;
           const editedCrypto = await Crypto.findByIdAndUpdate(
             id,
-            cryptoToBeUpdated
+            cryptoToBeUpdated,
+            { new: true }
           );
           res.status(200).json(editedCrypto);
           debug(chalk.green("Updated crypto"));
