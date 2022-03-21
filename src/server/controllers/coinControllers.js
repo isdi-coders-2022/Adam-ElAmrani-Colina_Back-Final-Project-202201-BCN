@@ -171,7 +171,6 @@ const updateCrypto = async (req, res, next) => {
       } else {
         (async () => {
           const cryptoToBeUpdated = req.body;
-          const { id } = req.params;
           const editedCrypto = await Crypto.findByIdAndUpdate(
             id,
             cryptoToBeUpdated
