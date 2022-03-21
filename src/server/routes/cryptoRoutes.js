@@ -24,6 +24,6 @@ router.post(
   validate(cyrptoJoiSchema),
   createCrypto
 );
-router.patch("/crypto/:id", updateCrypto);
+router.patch("/crypto/:id", upload.single("img"), updateCrypto);
 
 module.exports = router;
