@@ -51,8 +51,25 @@ const login = async (req, res, next) => {
   } else {
     const data = { username };
     const token = jwt.sign(data, process.env.SECRET_KEY);
-    res.json({ token });
+    res.json({ token: { token, username } });
   }
 };
 
-module.exports = { register, login };
+const getUser = async (req, res, next) => {
+  const headerAuth = req.header("Authorization");
+  const token = headerAuth.replace("Bearer ", "");
+  const username = jwt.verify(token, process.env.SECRET_KEY);
+  const user = await User.findOne(username);
+
+  if (user) {
+    res.status(200).json({ user });
+    debug(chalk.green(`Requested user ${user.username}`));
+  } else {
+    const error = new Error("Couldn't find the requested user");
+    debug(chalk.red(`Error: ${error}`));
+    res.status(404).json(error);
+    next(error);
+  }
+};
+
+module.exports = { register, login, getUser };
