@@ -1,8 +1,5 @@
 const Crypto = require("../../database/models/Crypto");
-const fs = require("fs");
 const { getCryptos, deleteCrypto, createCrypto } = require("./coinControllers");
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const dataBaseStart = require("../../database");
 
 let cryptos;
 beforeEach(() => {

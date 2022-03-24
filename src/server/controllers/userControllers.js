@@ -39,7 +39,6 @@ const register = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  debugger;
   const { username, password } = req.body;
   const user = await User.findOne({ username });
 
