@@ -18,7 +18,6 @@ beforeEach(async () => {
   jest.resetAllMocks();
 
   newCrypto = await Crypto.create({
-    id: 1,
     name: "Bitcoin",
     symbol: "BTC",
     slug: "bitcoin",
@@ -91,7 +90,7 @@ describe("Given a /cryptos/new-crypto endpoint", () => {
       };
 
       const { body } = await request(app)
-        .post(path)
+        .patch(path)
         .send(post)
         .expect(statusCode);
 
