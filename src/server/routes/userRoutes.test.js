@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dataBaseStart = require("../../database/index");
 const app = require("../index");
 const User = require("../../database/models/User");
+
 jest.mock("bcrypt");
 
 let dataBase;
