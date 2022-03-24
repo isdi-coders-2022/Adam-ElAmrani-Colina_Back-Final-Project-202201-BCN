@@ -15,11 +15,12 @@ const Crypto = require("../../database/models/Crypto");
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: "coinster-e900b.firebaseapp.com",
-  projectId: "coinster-e900b",
-  storageBucket: "coinster-e900b.appspot.com",
-  messagingSenderId: "83355654625",
-  appId: "1:83355654625:web:fc2e056cecf2dd8c809aa0",
+  authDomain: "coinster-ce847.firebaseapp.com",
+  projectId: "coinster-ce847",
+  storageBucket: "coinster-ce847.appspot.com",
+  messagingSenderId: "834849186940",
+  appId: "1:834849186940:web:8c1886490c0416e60295f9",
+  measurementId: "G-SP4HG2GD1Y",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
